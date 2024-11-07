@@ -71,3 +71,26 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
             database=getenv('PERSONAL_DATA_DB_NAME')
         )
     return conn
+
+
+def main():
+    """
+    Display each row under a filtered format.
+    """
+    db_conn = get_db()
+    cursor = db_conn.cursor()
+    cursor.execute("SELECT * FROM users;")
+    field_names = [field[0] for field in cursor.description]
+    logger = get_logger()
+    for row in cursor:
+        record = dict(zip(field_names, row))
+        message = ""
+        for k, v in record.items():
+            message += f'{k}={v}; '
+        logger.info(message)
+    cursor.close()
+    db_conn.close()
+
+
+if __name__ == "__main__":
+    main()
