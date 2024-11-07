@@ -35,11 +35,10 @@ def filter_datum(fields: List[str], redaction: str,
     Redacts the specified fields in the message
     with the redacted value and separator.
     """
-    return re.sub(
-        r'\b(' + '|'.join(field for field in fields) + r')\b',
-        lambda match: f"{match.group(0)}={redaction}{separator}",
-        message
-    )
+    for field in fields:
+        message = re.sub(f'{field}=(.*?){separator}',
+                         f'{field}={redaction}{separator}', message)
+    return message
 
 
 PII_FIELDS = ("name", "email", "password", "ssn", "phone")
