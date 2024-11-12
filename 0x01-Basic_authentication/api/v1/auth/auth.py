@@ -25,12 +25,11 @@ class Auth:
                 path = path[:len(path) - 1]
             if path == value:
                 return False
-            
         return True
-
 
     def authorization_header(self, request=None) -> str:
         """
+        This method gets authorization header.
         """
         if request is None:
             return None
@@ -38,5 +37,6 @@ class Auth:
 
     def current_user(self, request=None) -> TypeVar('User'):
         """
+        This method return a user from the request.
         """
         return None
