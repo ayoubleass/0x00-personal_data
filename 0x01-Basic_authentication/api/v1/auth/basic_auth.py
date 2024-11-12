@@ -65,9 +65,19 @@ class BasicAuth(Auth):
             return None
         if not isinstance(user_pwd, str) or user_pwd is None:
             return None
-        users = User.search({'email' : user_email})
+        users = User.search({'email': user_email})
         if len(users) <= 1:
             return None
         if users[0].is_valid_password(user_pwd):
             return users[0]
         return None
+
+    def current_user(self, request=None) -> TypeVar('User'):
+        """
+        Retrives the user from the rquest obj.
+        """
+        auth_header = self.authorization_header(request)
+        token = self.extract_base64_authorization_header(auth_header)
+        cred = self.decode_base64_authorization_header(token)
+        email, password = self.extract_user_credentials(cred)
+        return self.user_object_from_credentials(email, password)
