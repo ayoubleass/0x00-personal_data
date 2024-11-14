@@ -32,3 +32,25 @@ class SessionAuth(Auth):
         if session_id is None and type(session_id) != str:
             return None
         return self.user_id_by_session_id.get(session_id)
+
+    def current_user(self, request=None):
+        """
+            Retrive the user using the session id.
+        """
+        session_id = self.session_cookie(request)
+        user_id = self.user_id_for_session_id(session_id)
+        user = User.get(user_id)
+        return user
+
+    def destroy_session(self, request=None):
+        """
+            Destroys the session.
+        """
+        if request is None:
+            return False
+        session_id = self.session_cookie(request)
+        user_id = self.user_id_for_session_id(session_id)
+        if user_id is None:
+            return False
+        del self.user_id_by_session_id[session_id]
+        return True
