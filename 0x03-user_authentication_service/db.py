@@ -63,3 +63,18 @@ class DB:
         except NoResultFound:
             raise NoResultFound()
         return user
+
+    def update_user(self, user_id: int, **kwargs) -> None:
+        """
+        Update a user.
+        """
+        session = self._session
+        try:
+            user = self.find_user_by(id=user_id)
+        except NoResultFound:
+            pass
+        for attr, value in kwargs.items():
+            if not hasattr(User, attr):
+                raise ValueError
+            setattr(user, attr, value)
+        session.commit()
