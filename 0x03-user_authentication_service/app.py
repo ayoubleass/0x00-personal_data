@@ -57,7 +57,7 @@ def logout() -> str:
     if not user:
         abort(403)
     AUTH.destroy_session(user.id)
-    return redirect(url_for("index"))
+    return redirect('/')
 
 
 @app.route("/profile")
@@ -73,7 +73,7 @@ def profile() -> str:
 
 
 @app.route("/reset_password", methods=["POST"])
-def get_reset_password_token():
+def get_reset_password_token() -> str:
     """
     Generates a reset token.
     """
